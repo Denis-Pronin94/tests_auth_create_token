@@ -49,3 +49,132 @@ class TestAuth:
         )
 
         assert response.status_code == HTTPStatus.OK
+
+    def test_error_path(self):
+        response = requests.post('https://restful-booker.herokuapp.com/aut',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "admin",
+                                     "password": "password123"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_valid_user_name_and_not_valid_password(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "admin",
+                                     "password": "!!!!!"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_not_valid_user_name_and_valid_password(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "!!!!!",
+                                     "password": "password123"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_only_body_user_name(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "admin"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_only_body_password(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "password": "password123"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_space_in_values(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": " ad min ",
+                                     "password": " passw ord123 "
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_symbol_in_values(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "/!#$.,+-=admin",
+                                     "password": "password123/!#$.,+-="
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_register_in_values(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "PASSword123",
+                                     "password": "ADmin"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_another_language_in_values(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "админ",
+                                     "password": "пароль123"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_numbers_in_values(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: application/json',
+                                 {
+                                     "username": "admin123",
+                                     "password": "password123"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
+
+    def test_not_valid_content_type(self):
+        response = requests.post('https://restful-booker.herokuapp.com/auth',
+                                 'Content-Type: text/plain',
+                                 {
+                                     "username": "пароль123",
+                                     "password": "админ"
+                                 }
+                                 )
+
+        assert response.status_code == HTTPStatus.OK
+        assert 'reason' in response.json()
