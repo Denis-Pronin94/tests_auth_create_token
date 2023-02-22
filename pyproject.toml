@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "test-auth-create-token"
+version = "0.1.0"
+description = ""
+authors = ["Denis Pronin <den4ik.pronin94@gmail.com>"]
+readme = "README.md"
+packages = [{include = "test_auth_create_token"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
