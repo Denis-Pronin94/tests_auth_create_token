@@ -1,3 +1,4 @@
+import json
 from http import HTTPStatus
 
 import pytest
@@ -17,7 +18,7 @@ class TestAuth:
         headers: dict = {'Content-Type': 'application/json'},
     ) -> requests.Response:
         """Функция отправки запроса на авторизацию."""
-        json = {
+        payload = {
             "username": user_name,
             "password": password,
         }
@@ -25,18 +26,19 @@ class TestAuth:
         return requests.post(
             f'{self.BASE_URL}/auth',
             data=headers,
-            json=json)
+            json=payload,
+        )
 
     @pytest.fixture
     def send_auth_request_fixture(self) -> requests.Response:
         """Отправка запроса на авторизацию - получения токена."""
-        json = {
+        payload = {
             "username": "admin",
             "password": "password123",
         }
         return requests.post(
             url='https://restful-booker.herokuapp.com/auth',
-            json=json,
+            json=payload,
         )
 
     def test_success_get_token(self, send_auth_request_fixture: requests.Response):
@@ -74,10 +76,10 @@ class TestAuth:
 
         assert response.status_code == HTTPStatus.OK
 
-    def test_error_path(self):
-        """Негативный тест с ошибкой в пути."""
-        response = requests.post(
-            url=f'{self.BASE_URL}/aut',
+    def test_not_valid_method(self):
+        """Негативный тест - отправка запроса другим методом."""
+        response = requests.put(
+            url=f'{self.BASE_URL}/auth',
             headers={'Content-Type': 'application/json'},
             json={
                 "username": "admin",
@@ -92,14 +94,16 @@ class TestAuth:
         response = self.send_auth_request(password='!!!!!!!!!!')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_not_valid_user_name_and_valid_password(self):
         """Негативный тест с невалидныйм user_name и валидным паролем."""
         response = self.send_auth_request(user_name='!!!!!')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_only_body_user_name(self):
         """Негативный тест - в теле передаётся только user_name."""
@@ -110,7 +114,8 @@ class TestAuth:
         )
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_only_body_password(self):
         """Негативный тест - в теле передаётся только пароль."""
@@ -121,42 +126,48 @@ class TestAuth:
         )
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_space_in_values(self):
         """Негатиыный тест - в значениях присутствуют пробелы вначале, в середине и в конце."""
         response = self.send_auth_request(user_name=' ad min ', password=' pass word123 ')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_symbol_in_values(self):
         """Нагативный тест - в значениях присутствуют спец. символы."""
         response = self.send_auth_request(user_name='!@#$,.admin', password='!@#$%,.password123')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_register_in_values(self):
         """Негативный тест - в значениях пристутвует разный регистр."""
         response = self.send_auth_request(user_name='ADmin', password='PAssword123')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_another_language_in_values(self):
         """Негативный тест - значения на другой языке."""
         response = self.send_auth_request(user_name='админ', password='пароль123')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_numbers_in_values(self):
         """Негативный тест - в значениях передаются цифры."""
         response = self.send_auth_request(user_name='admin123', password='password123')
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
 
     def test_not_valid_content_type(self):
         """Негативный тест - в заоловке пердаётся не правильный Content-Type."""
@@ -167,4 +178,5 @@ class TestAuth:
         )
 
         assert response.status_code == HTTPStatus.OK
-        assert 'reason' in response.json()
+        data_json = json.loads(response.content)
+        assert data_json["reason"] == "Bad credentials"
