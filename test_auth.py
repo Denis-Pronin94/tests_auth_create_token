@@ -11,16 +11,12 @@ class TestAuth:
     BASE_URL = 'https://restful-booker.herokuapp.com'
 
     def send_auth_request(
-            self,
-            user_name: str = 'admin',
-            password: str = 'password123',
-            headers: dict = {'Content-Type': 'application/json'},
+        self,
+        payload_fixture: dict,
+        headers: dict = {'Content-Type': 'application/json'},
     ) -> requests.Response:
         """Функция отправки запроса на авторизацию."""
-        payload = {
-            "username": user_name,
-            "password": password,
-        }
+        payload = payload_fixture
 
         return requests.post(
             f'{self.BASE_URL}/auth',
@@ -29,16 +25,21 @@ class TestAuth:
         )
 
     @pytest.fixture
-    def send_auth_request_fixture(self) -> requests.Response:
+    def send_auth_request_fixture(self, payload_fixture: dict) -> requests.Response:
         """Отправка запроса на авторизацию - получения токена."""
-        payload = {
-            "username": "admin",
-            "password": "password123",
-        }
+        payload = payload_fixture
         return requests.post(
             url=f'{self.BASE_URL}/auth',
             json=payload,
         )
+
+    @pytest.fixture
+    def payload_fixture(self) -> dict:
+        """Получение тела запроса."""
+        return {
+            "username": "admin",
+            "password": "password123",
+        }
 
     def test_success_get_token(self, send_auth_request_fixture: requests.Response):
         """Позитивный тест - проверка получения токена."""
@@ -87,7 +88,7 @@ class TestAuth:
             ('admin123', 'password123'),
         ],
     )
-    def test_wrong_credential(self, user_name: str, password: str):
+    def test_wrong_credentials(self, user_name: str, password: str):
         """Негативные тесты - отправка запроса с неправильными данными."""
         headers = {'Content-Type': 'application/json'}
 
@@ -114,7 +115,7 @@ class TestAuth:
             {},
         ],
     )
-    def test_wrong_body(self, payload: str):
+    def test_wrong_payload_schema(self, payload: str):
         """Негативные тесты - отправка запроса с неправильным телом."""
         headers = {'Content-Type': 'application/json'}
 
@@ -136,14 +137,11 @@ class TestAuth:
             'delete',
         ],
     )
-    def test_wrong_method(self, method: str):
+    def test_wrong_method(self, payload_fixture: dict, method: str):
         """Негативные тесты - отправка запроса с неправильным методом."""
         headers = {'Content-Type': 'application/json'}
 
-        payload = {
-            'username': 'admin',
-            'password': 'password123',
-        }
+        payload = payload_fixture
 
         response = requests.request(
             method,
@@ -162,12 +160,9 @@ class TestAuth:
             {'Content-Type': 'text/javascript; charset=utf-8'},
         ],
     )
-    def test_wrong_headers(self, headers: str):
+    def test_wrong_headers(self, payload_fixture: dict, headers: str):
         """Негативные тесты - отправка запроса с неправильным заголовком."""
-        payload = {
-            'username': 'admin',
-            'password': 'password123',
-        }
+        payload = payload_fixture
 
         response = requests.post(
             f'{self.BASE_URL}/auth',
