@@ -1,6 +1,10 @@
 from http import HTTPStatus
 
+
+from client import auth_client
+
 import pytest
+
 
 import requests
 
@@ -8,8 +12,7 @@ import requests
 class TestAuth:
     """Сьют - авторизация."""
 
-    BASE_URL = 'https://restful-booker.herokuapp.com'
-
+    @pytest.mark.skip(reason='Эта функция нужна для скипнутого теста')
     def send_auth_request(
         self,
         payload_fixture: dict,
@@ -24,6 +27,7 @@ class TestAuth:
             json=payload,
         )
 
+    @pytest.mark.skip(reason='Эта функция нужна для скипнутого теста')
     @pytest.fixture
     def send_auth_request_fixture(self, payload_fixture: dict) -> requests.Response:
         """Отправка запроса на авторизацию - получения токена."""
@@ -41,13 +45,14 @@ class TestAuth:
             "password": "password123",
         }
 
-    def test_success_get_token(self, send_auth_request_fixture: requests.Response):
+    def test_success_get_token(self, payload_fixture: dict):
         """Позитивный тест - проверка получения токена."""
-        response = send_auth_request_fixture
+        response = auth_client.request(payload=payload_fixture)
 
         assert response.status_code == HTTPStatus.OK
         assert 'token' in response.json()
 
+    @pytest.mark.skip(reason='Не готов клиент на UpdateBooking')
     def test_check_token(self, send_auth_request_fixture: requests.Response):
         """Позитивный тест - проверка токена."""
         response = send_auth_request_fixture
@@ -90,18 +95,12 @@ class TestAuth:
     )
     def test_wrong_credentials(self, user_name: str, password: str):
         """Негативные тесты - отправка запроса с неправильными данными."""
-        headers = {'Content-Type': 'application/json'}
-
         payload = {
             'username': user_name,
             'password': password,
         }
 
-        response = requests.post(
-            f'{self.BASE_URL}/auth',
-            headers=headers,
-            json=payload,
-        )
+        response = auth_client.request(payload)
 
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {'reason': 'Bad credentials'}
@@ -117,13 +116,7 @@ class TestAuth:
     )
     def test_wrong_payload_schema(self, payload: str):
         """Негативные тесты - отправка запроса с неправильным телом."""
-        headers = {'Content-Type': 'application/json'}
-
-        response = requests.post(
-            f'{self.BASE_URL}/auth',
-            headers=headers,
-            json=payload,
-        )
+        response = auth_client.request(payload)
 
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {'reason': 'Bad credentials'}
@@ -139,16 +132,7 @@ class TestAuth:
     )
     def test_wrong_method(self, payload_fixture: dict, method: str):
         """Негативные тесты - отправка запроса с неправильным методом."""
-        headers = {'Content-Type': 'application/json'}
-
-        payload = payload_fixture
-
-        response = requests.request(
-            method,
-            f'{self.BASE_URL}/auth',
-            headers=headers,
-            json=payload,
-        )
+        response = auth_client.request(payload=payload_fixture, method=method)
 
         assert response.status_code == HTTPStatus.NOT_FOUND
 
@@ -162,13 +146,7 @@ class TestAuth:
     )
     def test_wrong_headers(self, payload_fixture: dict, headers: str):
         """Негативные тесты - отправка запроса с неправильным заголовком."""
-        payload = payload_fixture
-
-        response = requests.post(
-            f'{self.BASE_URL}/auth',
-            headers=headers,
-            json=payload,
-        )
+        response = auth_client.request(payload=payload_fixture, headers=headers)
 
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {'reason': 'Bad credentials'}
