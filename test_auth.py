@@ -11,9 +11,9 @@ class TestAuth:
     BASE_URL = 'https://restful-booker.herokuapp.com'
 
     def send_auth_request(
-        self,
-        payload_fixture: dict,
-        headers: dict = {'Content-Type': 'application/json'},
+            self,
+            payload_fixture: dict,
+            headers: dict = {'Content-Type': 'application/json'},
     ) -> requests.Response:
         """Функция отправки запроса на авторизацию."""
         payload = payload_fixture
