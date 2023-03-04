@@ -4,7 +4,7 @@ BASE_URL = 'https://restful-booker.herokuapp.com'
 
 
 class BaseClient:
-    """Класс - BaseClient."""
+    """Базовый класс для API-клиентов."""
 
     DEFAULT_HEADERS = {'Content-Type': 'application/json'}
 
@@ -15,13 +15,15 @@ class BaseClient:
 
 
 class AuthClient(BaseClient):
-    """Класс - AuthClient."""
+    """Базовый класс для автризации клиента."""
 
-    def request(self, payload: dict, method: str = None, headers: dict = None)\
-            -> requests.Response:
+    def request(
+        self,
+        payload: dict,
+        method: str = 'POST',
+        headers: dict = {},
+    ) -> requests.Response:
         """Отправка запроса."""
-        method = method or 'POST'
-
         return requests.request(
             method,
             url=f'{BASE_URL}/auth',
