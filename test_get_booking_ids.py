@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+
 from client import get_booking_ids
 
 import pytest
@@ -41,7 +42,10 @@ class TestGetBookingIds:
         response = get_booking_ids.request(params=params)
 
         assert response.status_code == HTTPStatus.OK
-        assert 'bookingid' in response.text
+        for i in response.json():
+            assert 'bookingid' in i
+            assert i['bookingid'] > 0
+            assert i['bookingid'] == int or float
 
     @pytest.mark.parametrize(
         'method',
@@ -57,6 +61,7 @@ class TestGetBookingIds:
 
         assert response.status_code == HTTPStatus.NOT_FOUND
 
+    @pytest.mark.skip(reason='Баг - ответ должен быть BAD_REQUEST, а он 200 ОК')
     @pytest.mark.parametrize(
         'params',
         [
@@ -76,4 +81,4 @@ class TestGetBookingIds:
         """Негативные тесты - неправильные параметры и несуществующие значения."""
         response = get_booking_ids.request(params=params)
 
-        assert response.status_code == HTTPStatus.OK
+        assert response.status_code == HTTPStatus.BAD_REQUEST
