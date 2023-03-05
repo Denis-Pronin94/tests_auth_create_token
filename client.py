@@ -72,6 +72,34 @@ class GetBookingIdsClient(BaseBookingClient):
         )
 
 
+class BaseCreateBookingClient(BaseClient):
+    """Базовый класс для получения информации о бронировании."""
+
+    CREATE_BOOKING_HEADERS = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }
+
+
+class CreateBookingClient(BaseCreateBookingClient, BaseBookingClient):
+    """Базовый класс для создания бронирования."""
+
+    def request(
+        self,
+        payload: dict,
+        method: str = 'POST',
+        headers: dict = {},
+    ) -> requests.Response:
+        """Отправка запроса."""
+        return requests.request(
+            method,
+            url=f'{self.BOOKING_URL}',
+            json=payload,
+            headers=dict(self.CREATE_BOOKING_HEADERS, **headers),
+        )
+
+
 auth_client = AuthClient()
 get_booking = GetBookingClient()
 get_booking_ids = GetBookingIdsClient()
+create_booking = CreateBookingClient()
