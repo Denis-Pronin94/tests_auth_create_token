@@ -35,13 +35,13 @@ class AuthClient(BaseClient):
 
 
 class BaseBookingClient(BaseClient):
-    """Базовый класс для получение информации о бронировании."""
+    """Базовый класс для получения информации о бронировании."""
 
     BOOKING_URL = f'{BASE_URL}/booking'
 
 
 class GetBookingClient(BaseBookingClient):
-    """Возвращает клиент информацию о бронировании."""
+    """Возвращает клиент для получения информации о бронировании."""
 
     def request(
         self,

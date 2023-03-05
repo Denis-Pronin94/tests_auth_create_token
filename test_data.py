@@ -256,3 +256,36 @@ negative_type_in_data = [{
     'additionalneeds': True,
 },
 ]
+
+ids_test_positive = [
+    'Валидные значения из документации',
+    'Валидные значения с короткими значениями',
+    'Валидные значения с длинными значениями',
+]
+
+ids_for_test_no_parameter = [
+    'Нет параметра firstname',
+    'Нет параметра lastname',
+    'Нет параметра totalprice',
+    'Нет параметра depositpaid,',
+    'Нет параметра bookingdates',
+    'Нет параметра checkin',
+    'Нет параметра checkout',
+    'Нет параметра additionalneeds',
+]
+
+ids_test_wrong_value = [
+    'firstname - число',
+    'lastname - число',
+    'totalprice - строка',
+    'depositpaid - строка',
+    'checkin - строка',
+    'checkout - строка',
+    'additional_needs - число',
+    'firstname - булевое значение',
+    'lastname - булевое значение',
+    'totalprice - булевое значение',
+    'checkin - булевое значение',
+    'checkout - булевое значение',
+    'additionalneeds - булевое значение',
+]

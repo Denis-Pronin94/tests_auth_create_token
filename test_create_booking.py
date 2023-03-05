@@ -4,7 +4,8 @@ from client import create_booking
 
 import pytest
 
-from test_data import negative_type_in_data, no_parameter_in_data, valid_data
+from test_data import ids_for_test_no_parameter, ids_test_positive, ids_test_wrong_value, \
+    negative_type_in_data, no_parameter_in_data, valid_data
 
 
 class TestCreateBooking:
@@ -13,11 +14,7 @@ class TestCreateBooking:
     @pytest.mark.parametrize(
         'payload',
         valid_data,
-        ids=[
-            'Валидные значения из документации',
-            'Валидные значения с короткими значениями',
-            'Валидные значения с длинными значениями',
-        ],
+        ids=ids_test_positive,
     )
     def test_positive(self, payload: dict):
         """Позитивные тесты."""
@@ -65,16 +62,7 @@ class TestCreateBooking:
     @pytest.mark.parametrize(
         'payload',
         no_parameter_in_data,
-        ids=[
-            'Нет параметра firstname',
-            'Нет параметра lastname',
-            'Нет параметра totalprice',
-            'Нет параметра depositpaid,',
-            'Нет параметра bookingdates',
-            'Нет параметра checkin',
-            'Нет параметра checkout',
-            'Нет параметра additionalneeds',
-        ],
+        ids=ids_for_test_no_parameter,
     )
     def test_no_parameter(self, payload: dict):
         """Негативные тесты - отправка запроса с отсутстующим параметром."""
@@ -85,21 +73,7 @@ class TestCreateBooking:
     @pytest.mark.parametrize(
         'payload',
         negative_type_in_data,
-        ids=[
-            'firstname - число',
-            'lastname - число',
-            'totalprice - строка',
-            'depositpaid - строка',
-            'checkin - строка',
-            'checkout - строка',
-            'additional_needs - число',
-            'firstname - булевое значение',
-            'lastname - булевое значение',
-            'totalprice - булевое значение',
-            'checkin - булевое значение',
-            'checkout - булевое значение',
-            'additionalneeds - булевое значение',
-        ],
+        ids=ids_test_wrong_value,
     )
     def test_wrong_value(self, payload: dict):
         """Негативные тесты - отправка запроса с неправильным значением параметра."""
