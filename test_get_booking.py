@@ -35,7 +35,7 @@ class TestGetBooking:
         ],
     )
     def test_wrong_values(self, booking_id: str):
-        """Негативные тесты - некорректные значения."""
+        """Негативные тесты - отправляем запрос с некорректными значениями."""
         response = get_booking.request(booking_id=booking_id)
 
         assert response.status_code == HTTPStatus.NOT_FOUND
@@ -49,7 +49,7 @@ class TestGetBooking:
         ],
     )
     def test_wrong_method(self, method: str):
-        """Негативные тесты - некорректный метод."""
+        """Негативные тесты - отправляем запрос с неправильным методом."""
         response = get_booking.request(method=method)
 
         assert response.status_code == HTTPStatus.FORBIDDEN

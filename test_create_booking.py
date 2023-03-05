@@ -4,6 +4,12 @@ from client import create_booking
 
 import pytest
 
+from test_data import additional_needs, additional_needs_bool, additional_needs_number, \
+    booking_dates, checkin, checkin_bool, checkin_str, checkout, checkout_bool, checkout_str, \
+    deposit_paid, deposit_paid_str, first_name_bool, first_name_number, firstname, \
+    last_name_bool, last_name_number, lastname, positive_data_one, positive_data_two, \
+    total_price, total_price_bool, total_price_str
+
 
 class TestCreateBooking:
     """Сьют - создание бронирования."""
@@ -11,29 +17,10 @@ class TestCreateBooking:
     @pytest.mark.parametrize(
         'payload',
         [
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jimmmmmmmm',
-                'lastname': 'Brownnnnnnnnnnnn',
-                'totalprice': 99999999999,
-                'depositpaid': False,
-                'bookingdates': {
-                    'checkin': '2016-01-01',
-                    'checkout': '2022-01-01',
-                },
-                'additionalneeds': 'Breakfasttttttttttt',
-            },
+            positive_data_one,
+            positive_data_two,
         ],
+        ids=['Валидные значения', 'Валидные значения'],
     )
     def test_positive(self, payload: dict):
         """Позитивные тесты."""
@@ -41,27 +28,12 @@ class TestCreateBooking:
 
         assert response.status_code == HTTPStatus.OK
         assert 'bookingid', 'booking' in response.json()
-        assert ['bookingid'] == int or float
+        assert type(response.json()['bookingid']) == int
         assert 'firstname', 'lastname' in response.json()
         assert 'totalprice', 'depositpaid' in response.json()
-        assert ['totalprice'] == int or float
+        assert type(response.json()['booking']['totalprice']) == int
         assert 'bookingdates', 'checkin' in response.json()
         assert 'checkout', 'additionalneeds' in response.json()
-
-    @pytest.fixture
-    def payload_fixture(self) -> dict:
-        """Получение тела запроса."""
-        return {
-            'firstname': 'Jim',
-            'lastname': 'Brown',
-            'totalprice': 111,
-            'depositpaid': True,
-            'bookingdates': {
-                'checkin': '2018-01-01',
-                'checkout': '2019-01-01',
-            },
-            'additionalneeds': 'Breakfast',
-        }
 
     @pytest.mark.parametrize(
         'method',
@@ -72,96 +44,37 @@ class TestCreateBooking:
             'patch',
         ],
     )
-    def test_wrong_method(self, method: str, payload_fixture: dict):
-        """Негативные тесты - неправильный метод."""
-        response = create_booking.request(method=method, payload=payload_fixture)
+    def test_wrong_method(self, method: str):
+        """Негативные тесты - отправляем запрос с неправильным методом."""
+        response = create_booking.request(method=method, payload=positive_data_one)
 
         assert response.status_code == HTTPStatus.NOT_FOUND
 
     @pytest.mark.parametrize(
         'payload',
         [
-            {
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-            },
+            firstname,
+            lastname,
+            total_price,
+            deposit_paid,
+            booking_dates,
+            checkin,
+            checkout,
+            additional_needs,
+        ],
+        ids=[
+            'Нет параметра firstname',
+            'Нет параметра lastname',
+            'Нет параметра totalprice',
+            'Нет параметра depositpaid,',
+            'Нет параметра bookingdates',
+            'Нет параметра checkin',
+            'Нет параметра checkout',
+            'Нет параметра additionalneeds',
         ],
     )
     def test_no_parameter(self, payload: dict):
-        """Негативные тесты - отсутствие параметров."""
+        """Негативные тесты - отправка запроса с отсутстующим параметром."""
         response = create_booking.request(payload=payload)
 
         assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
@@ -169,153 +82,38 @@ class TestCreateBooking:
     @pytest.mark.parametrize(
         'payload',
         [
-            {
-                'firstname': 123,
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 123,
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': '111',
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': 'True',
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': 'Jim',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': 'Brown',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 123,
-            },
-            {
-                'firstname': True,
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': False,
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': True,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': True,
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': 'False',
-                },
-                'additionalneeds': 'Breakfast',
-            },
-            {
-                'firstname': 'Jim',
-                'lastname': 'Brown',
-                'totalprice': 111,
-                'depositpaid': True,
-                'bookingdates': {
-                    'checkin': '2018-01-01',
-                    'checkout': '2019-01-01',
-                },
-                'additionalneeds': True,
-            },
+            first_name_number,
+            last_name_number,
+            total_price_str,
+            deposit_paid_str,
+            checkin_str,
+            checkout_str,
+            additional_needs_number,
+            first_name_bool,
+            last_name_bool,
+            total_price_bool,
+            checkin_bool,
+            checkout_bool,
+            additional_needs_bool,
+        ],
+        ids=[
+            'firstname - число',
+            'lastname - число',
+            'totalprice - строка',
+            'depositpaid - строка',
+            'checkin - строка',
+            'checkout - строка',
+            'additional_needs - число',
+            'firstname - булевое значение',
+            'lastname - булевое значение',
+            'totalprice - булевое значение',
+            'checkin - булевое значение',
+            'checkout - булевое значение',
+            'additionalneeds - булевое значение',
         ],
     )
     def test_wrong_value(self, payload: dict):
-        """Негативные тесты - отсутствие параметров."""
+        """Негативные тесты - отправка запроса с неправильным значением параметра."""
         response = create_booking.request(payload=payload)
 
         assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

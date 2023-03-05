@@ -17,7 +17,7 @@ class BaseClient:
 
 
 class AuthClient(BaseClient):
-    """Базовый класс для автризации клиента."""
+    """Автризуемся клиентом."""
 
     def request(
         self,
@@ -35,13 +35,13 @@ class AuthClient(BaseClient):
 
 
 class BaseBookingClient(BaseClient):
-    """Базовый класс для получения информации о бронировании."""
+    """Базовый класс для получение информации о бронировании."""
 
     BOOKING_URL = f'{BASE_URL}/booking'
 
 
 class GetBookingClient(BaseBookingClient):
-    """Базовый класс для получения информации о бронирования."""
+    """Получаем информацию о бронировании."""
 
     def request(
         self,
@@ -57,7 +57,7 @@ class GetBookingClient(BaseBookingClient):
 
 
 class GetBookingIdsClient(BaseBookingClient):
-    """Базовый класс для получения id бронирования."""
+    """Получением id бронирования."""
 
     def request(
         self,
@@ -82,7 +82,7 @@ class BaseCreateBookingClient(BaseClient):
 
 
 class CreateBookingClient(BaseCreateBookingClient, BaseBookingClient):
-    """Базовый класс для создания бронирования."""
+    """Получением информацию о бронировании."""
 
     def request(
         self,

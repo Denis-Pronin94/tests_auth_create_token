@@ -42,10 +42,10 @@ class TestGetBookingIds:
         response = get_booking_ids.request(params=params)
 
         assert response.status_code == HTTPStatus.OK
-        for i in response.json():
-            assert 'bookingid' in i
-            assert i['bookingid'] > 0
-            assert i['bookingid'] == int or float
+        for json_booking_id in response.json():
+            assert 'bookingid' in json_booking_id
+            assert json_booking_id['bookingid'] > 0
+            assert type(json_booking_id['bookingid']) == int
 
     @pytest.mark.parametrize(
         'method',
@@ -56,7 +56,7 @@ class TestGetBookingIds:
         ],
     )
     def test_wrong_method(self, method: str):
-        """Негативные тесты - неправильный метод."""
+        """Негативные тесты - отправляем запрос с неправильным методом."""
         response = get_booking_ids.request(method=method)
 
         assert response.status_code == HTTPStatus.NOT_FOUND
@@ -78,7 +78,7 @@ class TestGetBookingIds:
         ],
     )
     def test_wrong_params(self, params: dict):
-        """Негативные тесты - неправильные параметры и несуществующие значения."""
+        """Негативные тесты - отправляем запрос с неправильными параметрами."""
         response = get_booking_ids.request(params=params)
 
         assert response.status_code == HTTPStatus.BAD_REQUEST
