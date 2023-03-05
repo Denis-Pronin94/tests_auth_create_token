@@ -39,7 +39,7 @@ class TestAuth:
 
     @pytest.fixture
     def payload_fixture(self) -> dict:
-        """Получение тела запроса."""
+        """Получением тело запроса."""
         return {
             "username": "admin",
             "password": "password123",
