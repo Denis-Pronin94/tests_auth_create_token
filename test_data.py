@@ -1,4 +1,4 @@
-positive_data_one = {
+valid_data = [{
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -8,9 +8,19 @@ positive_data_one = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-positive_data_two = {
+},
+    {
+    'firstname': 'J',
+    'lastname': 'B',
+    'totalprice': 9,
+    'depositpaid': False,
+    'bookingdates': {
+        'checkin': '2016-01-01',
+        'checkout': '2022-01-01',
+    },
+    'additionalneeds': 'B',
+},
+    {
     'firstname': 'Jimmmmmmmm',
     'lastname': 'Brownnnnnnnnnnnn',
     'totalprice': 99999999999,
@@ -20,9 +30,10 @@ positive_data_two = {
         'checkout': '2022-01-01',
     },
     'additionalneeds': 'Breakfasttttttttttt',
-}
+},
+]
 
-firstname = {
+no_parameter_in_data = [{
     'lastname': 'Brown',
     'totalprice': 111,
     'depositpaid': True,
@@ -31,9 +42,8 @@ firstname = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-lastname = {
+},
+    {
     'firstname': 'Jim',
     'totalprice': 111,
     'depositpaid': True,
@@ -42,9 +52,8 @@ lastname = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-total_price = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'depositpaid': True,
@@ -53,9 +62,8 @@ total_price = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-deposit_paid = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -64,17 +72,15 @@ deposit_paid = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-booking_dates = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
     'depositpaid': True,
     'additionalneeds': 'Breakfast',
-}
-
-checkin = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -83,9 +89,8 @@ checkin = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-checkout = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -94,9 +99,8 @@ checkout = {
         'checkin': '2018-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-additional_needs = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -105,9 +109,10 @@ additional_needs = {
         'checkin': '2018-01-01',
         'checkout': '2019-01-01',
     },
-}
+},
+]
 
-first_name_number = {
+negative_type_in_data = [{
     'firstname': 123,
     'lastname': 'Brown',
     'totalprice': 111,
@@ -117,9 +122,8 @@ first_name_number = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-last_name_number = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 123,
     'totalprice': 111,
@@ -129,9 +133,8 @@ last_name_number = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-total_price_str = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': '111',
@@ -141,9 +144,8 @@ total_price_str = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-deposit_paid_str = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -153,9 +155,8 @@ deposit_paid_str = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-checkin_str = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -165,9 +166,8 @@ checkin_str = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-checkout_str = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -177,9 +177,8 @@ checkout_str = {
         'checkout': 'Brown',
     },
     'additionalneeds': 'Breakfast',
-}
-
-additional_needs_number = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -189,9 +188,8 @@ additional_needs_number = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 123,
-}
-
-first_name_bool = {
+},
+    {
     'firstname': True,
     'lastname': 'Brown',
     'totalprice': 111,
@@ -201,9 +199,8 @@ first_name_bool = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-last_name_bool = {
+},
+    {
     'firstname': 'Jim',
     'lastname': False,
     'totalprice': 111,
@@ -213,9 +210,8 @@ last_name_bool = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-total_price_bool = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': True,
@@ -225,9 +221,8 @@ total_price_bool = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-checkin_bool = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -237,9 +232,8 @@ checkin_bool = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': 'Breakfast',
-}
-
-checkout_bool = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -249,9 +243,8 @@ checkout_bool = {
         'checkout': False,
     },
     'additionalneeds': 'Breakfast',
-}
-
-additional_needs_bool = {
+},
+    {
     'firstname': 'Jim',
     'lastname': 'Brown',
     'totalprice': 111,
@@ -261,4 +254,5 @@ additional_needs_bool = {
         'checkout': '2019-01-01',
     },
     'additionalneeds': True,
-}
+},
+]

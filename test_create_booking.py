@@ -4,11 +4,7 @@ from client import create_booking
 
 import pytest
 
-from test_data import additional_needs, additional_needs_bool, additional_needs_number, \
-    booking_dates, checkin, checkin_bool, checkin_str, checkout, checkout_bool, checkout_str, \
-    deposit_paid, deposit_paid_str, first_name_bool, first_name_number, firstname, \
-    last_name_bool, last_name_number, lastname, positive_data_one, positive_data_two, \
-    total_price, total_price_bool, total_price_str
+from test_data import negative_type_in_data, no_parameter_in_data, valid_data
 
 
 class TestCreateBooking:
@@ -16,11 +12,12 @@ class TestCreateBooking:
 
     @pytest.mark.parametrize(
         'payload',
-        [
-            positive_data_one,
-            positive_data_two,
+        valid_data,
+        ids=[
+            'Валидные значения из документации',
+            'Валидные значения с короткими значениями',
+            'Валидные значения с длинными значениями',
         ],
-        ids=['Валидные значения', 'Валидные значения'],
     )
     def test_positive(self, payload: dict):
         """Позитивные тесты."""
@@ -35,6 +32,21 @@ class TestCreateBooking:
         assert 'bookingdates', 'checkin' in response.json()
         assert 'checkout', 'additionalneeds' in response.json()
 
+    @pytest.fixture
+    def payload(self) -> dict:
+        """Возвращает тело запроса для теста test_wrong_method."""
+        return {
+            'firstname': 'Jim',
+            'lastname': 'Brown',
+            'totalprice': 111,
+            'depositpaid': True,
+            'bookingdates': {
+                'checkin': '2018-01-01',
+                'checkout': '2019-01-01',
+            },
+            'additionalneeds': 'Breakfast',
+        }
+
     @pytest.mark.parametrize(
         'method',
         [
@@ -44,24 +56,15 @@ class TestCreateBooking:
             'patch',
         ],
     )
-    def test_wrong_method(self, method: str):
+    def test_wrong_method(self, method: str, payload: dict):
         """Негативные тесты - отправляем запрос с неправильным методом."""
-        response = create_booking.request(method=method, payload=positive_data_one)
+        response = create_booking.request(method=method, payload=payload)
 
         assert response.status_code == HTTPStatus.NOT_FOUND
 
     @pytest.mark.parametrize(
         'payload',
-        [
-            firstname,
-            lastname,
-            total_price,
-            deposit_paid,
-            booking_dates,
-            checkin,
-            checkout,
-            additional_needs,
-        ],
+        no_parameter_in_data,
         ids=[
             'Нет параметра firstname',
             'Нет параметра lastname',
@@ -81,21 +84,7 @@ class TestCreateBooking:
 
     @pytest.mark.parametrize(
         'payload',
-        [
-            first_name_number,
-            last_name_number,
-            total_price_str,
-            deposit_paid_str,
-            checkin_str,
-            checkout_str,
-            additional_needs_number,
-            first_name_bool,
-            last_name_bool,
-            total_price_bool,
-            checkin_bool,
-            checkout_bool,
-            additional_needs_bool,
-        ],
+        negative_type_in_data,
         ids=[
             'firstname - число',
             'lastname - число',

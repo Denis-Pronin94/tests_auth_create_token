@@ -17,7 +17,7 @@ class BaseClient:
 
 
 class AuthClient(BaseClient):
-    """Автризуемся клиентом."""
+    """Возвращает клиент для авторизации."""
 
     def request(
         self,
@@ -41,7 +41,7 @@ class BaseBookingClient(BaseClient):
 
 
 class GetBookingClient(BaseBookingClient):
-    """Получаем информацию о бронировании."""
+    """Возвращает клиент информацию о бронировании."""
 
     def request(
         self,
@@ -57,7 +57,7 @@ class GetBookingClient(BaseBookingClient):
 
 
 class GetBookingIdsClient(BaseBookingClient):
-    """Получением id бронирования."""
+    """Возвращает клиент для получения id бронирования."""
 
     def request(
         self,
@@ -73,7 +73,7 @@ class GetBookingIdsClient(BaseBookingClient):
 
 
 class BaseCreateBookingClient(BaseClient):
-    """Базовый класс для получения информации о бронировании."""
+    """Базовый класс для создания бронирования."""
 
     CREATE_BOOKING_HEADERS = {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ class BaseCreateBookingClient(BaseClient):
 
 
 class CreateBookingClient(BaseCreateBookingClient, BaseBookingClient):
-    """Получением информацию о бронировании."""
+    """Возвращает клиент для создания бронировании."""
 
     def request(
         self,
