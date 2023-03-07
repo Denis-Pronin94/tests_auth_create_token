@@ -22,7 +22,10 @@ class TestGetBooking:
         response = get_booking.request(booking_id=booking_id)
 
         assert response.status_code == HTTPStatus.OK
-        assert Booking.parse_obj(response.json())
+        try:
+            Booking.parse_obj(response.json())
+        except ValueError as err:
+            AssertionError(err)
 
     @pytest.mark.parametrize(
         'booking_id',

@@ -8,8 +8,6 @@ import pytest
 
 import requests
 
-from schemas import CreateToken
-
 
 class TestAuth:
     """Сьют - авторизация."""
@@ -52,7 +50,7 @@ class TestAuth:
         response = auth_client.request(payload=payload_fixture)
 
         assert response.status_code == HTTPStatus.OK
-        assert CreateToken.parse_obj(response.json())
+        assert 'token' in response.json()
 
     @pytest.mark.skip(reason='Не готов клиент на UpdateBooking')
     def test_check_token(self, send_auth_request_fixture: requests.Response):

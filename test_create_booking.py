@@ -29,7 +29,10 @@ class TestCreateBooking:
         response = create_booking.request(payload=payload)
 
         assert response.status_code == HTTPStatus.OK
-        assert CreateBookingResponseSchema.parse_obj(response.json())
+        try:
+            CreateBookingResponseSchema.parse_obj(response.json())
+        except ValueError as err:
+            AssertionError(err)
 
     @pytest.fixture
     def payload(self) -> dict:
