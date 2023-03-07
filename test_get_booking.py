@@ -4,6 +4,8 @@ from client import get_booking
 
 import pytest
 
+from schemas import Booking
+
 
 class TestGetBooking:
     """Сьют - получение информации о бронировании по id."""
@@ -20,10 +22,7 @@ class TestGetBooking:
         response = get_booking.request(booking_id=booking_id)
 
         assert response.status_code == HTTPStatus.OK
-        assert 'firstname', 'lastname' in response.json()
-        assert 'totalprice', 'depositpaid' in response.json()
-        assert 'bookingdates' in response.json()
-        assert 'checkin', 'checkout' in response.json()
+        assert Booking.parse_obj(response.json())
 
     @pytest.mark.parametrize(
         'booking_id',
