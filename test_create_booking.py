@@ -1,6 +1,9 @@
 from http import HTTPStatus
 
+
 from client import create_booking
+
+from jsonschema import ValidationError
 
 import pytest
 
@@ -31,7 +34,7 @@ class TestCreateBooking:
         assert response.status_code == HTTPStatus.OK
         try:
             CreateBookingResponseSchema.parse_obj(response.json())
-        except ValueError as err:
+        except ValidationError as err:
             AssertionError(err)
 
     @pytest.fixture

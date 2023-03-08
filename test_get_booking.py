@@ -2,6 +2,8 @@ from http import HTTPStatus
 
 from client import get_booking
 
+from jsonschema import ValidationError
+
 import pytest
 
 from schemas import Booking
@@ -24,7 +26,7 @@ class TestGetBooking:
         assert response.status_code == HTTPStatus.OK
         try:
             Booking.parse_obj(response.json())
-        except ValueError as err:
+        except ValidationError as err:
             AssertionError(err)
 
     @pytest.mark.parametrize(
