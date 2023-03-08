@@ -1,11 +1,22 @@
 from http import HTTPStatus
 
+
 from client import create_booking
+
+from jsonschema import ValidationError
 
 import pytest
 
-from test_data import ids_for_test_no_parameter, ids_test_positive, ids_test_wrong_value, \
-    negative_type_in_data, no_parameter_in_data, valid_data
+from schemas import CreateBookingResponseSchema
+
+from test_data import (
+    ids_for_test_no_parameter,
+    ids_test_positive,
+    ids_test_wrong_value,
+    negative_type_in_data,
+    no_parameter_in_data,
+    valid_data,
+)
 
 
 class TestCreateBooking:
@@ -21,13 +32,10 @@ class TestCreateBooking:
         response = create_booking.request(payload=payload)
 
         assert response.status_code == HTTPStatus.OK
-        assert 'bookingid', 'booking' in response.json()
-        assert type(response.json()['bookingid']) == int
-        assert 'firstname', 'lastname' in response.json()
-        assert 'totalprice', 'depositpaid' in response.json()
-        assert type(response.json()['booking']['totalprice']) == int
-        assert 'bookingdates', 'checkin' in response.json()
-        assert 'checkout', 'additionalneeds' in response.json()
+        try:
+            CreateBookingResponseSchema.parse_obj(response.json())
+        except ValidationError as err:
+            AssertionError(err)
 
     @pytest.fixture
     def payload(self) -> dict:

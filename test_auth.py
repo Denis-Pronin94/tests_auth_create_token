@@ -1,12 +1,15 @@
 from http import HTTPStatus
 
-
 from client import auth_client
+
+from jsonschema import ValidationError
 
 import pytest
 
 
 import requests
+
+from schemas import CreateTokenResponseSchema
 
 
 class TestAuth:
@@ -50,7 +53,10 @@ class TestAuth:
         response = auth_client.request(payload=payload_fixture)
 
         assert response.status_code == HTTPStatus.OK
-        assert 'token' in response.json()
+        try:
+            CreateTokenResponseSchema.parse_obj(response.json())
+        except ValidationError as err:
+            AssertionError(err)
 
     @pytest.mark.skip(reason='Не готов клиент на UpdateBooking')
     def test_check_token(self, send_auth_request_fixture: requests.Response):
